@@ -1,0 +1,13 @@
+﻿  sample2.cpp
+sample2.cpp(25): warning C4101: 'a': ローカル変数は 1 度も使われていません。
+sample2.cpp(25): warning C4101: 'b': ローカル変数は 1 度も使われていません。
+sample2.cpp(25): warning C4101: 'c': ローカル変数は 1 度も使われていません。
+sample2.cpp(28): warning C4101: 'stage': ローカル変数は 1 度も使われていません。
+sample2.cpp(27): warning C4101: 'menu': ローカル変数は 1 度も使われていません。
+  コード生成しています。
+  コード生成が終了しました。
+  1 of 10 functions (10.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  sample2.vcxproj -> c:\temp\visual studio 2015\Projects\sample2\Release\sample2.exe
+  sample2.vcxproj -> c:\temp\visual studio 2015\Projects\sample2\Release\sample2.pdb (Full PDB)
