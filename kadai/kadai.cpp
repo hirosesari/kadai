@@ -1,9 +1,43 @@
 #include <stdio.h>
 #include "stdafx.h"
+#include <Windows.h>
+#include <stdlib.h>
+#include <string.h>
+#include <fstream>
+#include <iostream>
+#define CHARBUFF 124
 #define STAGE       2      //ステージ数
 #define MAZE_ROW    5      //迷路の行数
 #define MAZE_COLUMN 5      //迷路の列数
 
+char *kind1 = { "1" };
+char *kind2 = { "2" };
+char *kind3 = { "3" };
+char *kind4 = { "4" };
+char *kind5 = { "5" };
+char *kind6 = { "6" };
+char *title = { "section1" };
+char strText[1024];
+char *endp;
+char keyValue1[1024];
+char keyValue2[1024];
+char keyValue3[1024];
+char keyValue4[1024];
+char keyValue5[1024];
+char keyValue6[1024];
+char *data1;
+char *data2;
+char *data3;
+char *data4;
+char *data5;
+char *data6;
+char section[CHARBUFF];
+
+int cnt = 0;
+
+void getCurrentDirectory(char *currentDirectory) {
+	GetCurrentDirectory(CHARBUFF, currentDirectory);
+}
 
 //プレイヤー
 typedef struct
@@ -15,7 +49,7 @@ typedef struct
 
 //迷路の一ブロック
 enum MazeKind { PATH, WALL, START, GOAL };    //ブロックの種類(道、壁、スタート、ゴール)
-enum MazeFlag { FALSE, TRUE };                //ブロックが判明しているかどうか
+enum MazeFlag { BATU, MARU };                //ブロックが判明しているかどうか
 
 typedef struct
 {
@@ -61,7 +95,7 @@ void MazeDraw(int playerRow, int playerColumn, MazeBlock maze[MAZE_ROW][MAZE_COL
 			{
 				printf("Ｐ");
 			}
-			else if (maze[i][j].flag == FALSE) //ブロックが判明していない場合
+			else if (maze[i][j].flag == BATU) //ブロックが判明していない場合
 			{
 				printf("？");
 			}
@@ -115,21 +149,24 @@ void MazePlayerMove(int *playerRow, int *playerColumn, MazeBlock maze[MAZE_ROW][
 	{
 		if (*playerRow - 1 >= 0) //迷路の範囲外でないことを確認
 		{
-			maze[*playerRow - 1][*playerColumn].flag = TRUE; //ブロックの種類が判明
+			maze[*playerRow - 1][*playerColumn].flag = MARU; //ブロックの種類が判明
 
 			if (maze[*playerRow - 1][*playerColumn].kind != WALL) //壁かどうか確認
 			{
 				*playerRow -= 1; //移動
-				printf("\n上に移動しました。\n");
+				printf("\n%s\n",data1);
+				cnt++;
 			}
 			else
 			{
-				printf("\n壁です。\n");
+				printf("\n%s\n", data5);
+				cnt++;
 			}
 		}
 		else
 		{
-			printf("\n範囲外です\n");
+			printf("\n%s\n",data6);
+			cnt++;
 
 		}
 	}
@@ -140,21 +177,24 @@ void MazePlayerMove(int *playerRow, int *playerColumn, MazeBlock maze[MAZE_ROW][
 	{
 		if (*playerRow + 1 < MAZE_ROW)
 		{
-			maze[*playerRow + 1][*playerColumn].flag = TRUE;
+			maze[*playerRow + 1][*playerColumn].flag = MARU;
 
 			if (maze[*playerRow + 1][*playerColumn].kind != WALL)
 			{
 				*playerRow += 1;
-				printf("\n下に移動しました。\n");
+				printf("\n%s\n", data2);
+				cnt++;
 			}
 			else
 			{
-				printf("\n壁です。\n");
+				printf("\n%s\n", data5);
+				cnt++;
 			}
 		}
 		else
 		{
-			printf("\n範囲外です\n");
+			printf("\n%s\n", data6);
+			cnt++;
 
 		}
 	}
@@ -165,21 +205,24 @@ void MazePlayerMove(int *playerRow, int *playerColumn, MazeBlock maze[MAZE_ROW][
 	{
 		if (*playerColumn - 1 >= 0)
 		{
-			maze[*playerRow][*playerColumn - 1].flag = TRUE;
+			maze[*playerRow][*playerColumn - 1].flag = MARU;
 
 			if (maze[*playerRow][*playerColumn - 1].kind != WALL)
 			{
 				*playerColumn -= 1;
-				printf("\n左に移動しました。\n");
+				printf("\n%s\n", data3);
+				cnt++;
 			}
 			else
 			{
-				printf("\n壁です。\n");
+				printf("\n%s\n", data5);
+				cnt++;
 			}
 		}
 		else
 		{
-			printf("\n範囲外です\n");
+			printf("\n%s\n", data6);
+			cnt++;
 
 		}
 	}
@@ -190,21 +233,24 @@ void MazePlayerMove(int *playerRow, int *playerColumn, MazeBlock maze[MAZE_ROW][
 	{
 		if (*playerColumn + 1 < MAZE_COLUMN)
 		{
-			maze[*playerRow][*playerColumn + 1].flag = TRUE;
+			maze[*playerRow][*playerColumn + 1].flag = MARU;
 
 			if (maze[*playerRow][*playerColumn + 1].kind != WALL)
 			{
 				*playerColumn += 1;
-				printf("\n右に移動しました。\n");
+				printf("\n%s\n", data4);
+				cnt++;
 			}
 			else
 			{
-				printf("\n壁です。\n");
+				printf("\n%s\n", data5);
+				cnt++;
 			}
 		}
 		else
 		{
-			printf("\n範囲外です\n");
+			printf("\n%s\n", data6);
+			cnt++;
 
 		}
 	}
@@ -219,6 +265,7 @@ int MazeGoalCheck(int playerRow, int playerColumn, MazeBlock maze[MAZE_ROW][MAZE
 	if (maze[playerRow][playerColumn].kind == GOAL) //プレイヤー位置がゴール地点に等しい
 	{
 		printf("ゴール!\n");
+		fprintf_s(stdout, "\n%d回でゴールしました\n", cnt);
 		return 1;
 	}
 	return 0;
@@ -235,19 +282,19 @@ void MazeGame(int stage)
 	MazeBlock maze[STAGE][MAZE_ROW][MAZE_COLUMN] =
 	{
 		{ //STAGE0
-			{ { START, TRUE } ,{ PATH , FALSE },{ PATH , FALSE },{ PATH , FALSE },{ PATH , FALSE } },
-			{ { WALL , FALSE } ,{ WALL , FALSE },{ PATH , FALSE },{ WALL , FALSE },{ WALL , FALSE } },
-			{ { WALL , FALSE } ,{ PATH , FALSE },{ PATH , FALSE },{ PATH , FALSE },{ PATH , FALSE } },
-			{ { PATH , FALSE } ,{ PATH , FALSE },{ WALL , FALSE },{ WALL , FALSE },{ WALL , FALSE } },
-			{ { WALL , FALSE } ,{ PATH , FALSE },{ PATH , FALSE },{ PATH , FALSE },{ GOAL , TRUE } },
+			{ { START, MARU } ,{ PATH , BATU },{ PATH , BATU },{ PATH , BATU },{ PATH , BATU } },
+			{ { WALL , BATU } ,{ WALL , BATU },{ PATH , BATU },{ WALL , BATU },{ WALL , BATU } },
+			{ { WALL , BATU } ,{ PATH , BATU },{ PATH , BATU },{ PATH , BATU },{ PATH , BATU } },
+			{ { PATH , BATU } ,{ PATH , BATU },{ WALL , BATU },{ WALL , BATU },{ WALL , BATU } },
+			{ { WALL , BATU } ,{ PATH , BATU },{ PATH , BATU },{ PATH , BATU },{ GOAL , MARU } },
 		},
 
 		{ //STAGE1
-			{ { PATH , FALSE } ,{ WALL , FALSE },{ PATH , FALSE },{ PATH , FALSE },{ PATH , FALSE } },
-			{ { PATH , FALSE } ,{ WALL , FALSE },{ PATH , FALSE },{ WALL , FALSE },{ PATH , FALSE } },
-			{ { START, TRUE } ,{ PATH , FALSE },{ PATH , FALSE },{ WALL , FALSE },{ GOAL , TRUE } },
-			{ { PATH , FALSE } ,{ WALL , FALSE },{ WALL , FALSE },{ WALL , FALSE },{ WALL , FALSE } },
-			{ { PATH , FALSE } ,{ PATH , FALSE },{ PATH , FALSE },{ PATH , FALSE },{ PATH , FALSE } },
+			{ { PATH , BATU } ,{ WALL , BATU },{ PATH , BATU },{ PATH , BATU },{ PATH , BATU } },
+			{ { PATH , BATU } ,{ WALL , BATU },{ PATH , BATU },{ WALL , BATU },{ PATH , BATU } },
+			{ { START, MARU } ,{ PATH , BATU },{ PATH , BATU },{ WALL , BATU },{ GOAL , MARU } },
+			{ { PATH , BATU } ,{ WALL , BATU },{ WALL , BATU },{ WALL , BATU },{ WALL , BATU } },
+			{ { PATH , BATU } ,{ PATH , BATU },{ PATH , BATU },{ PATH , BATU },{ PATH , BATU } },
 		}
 	};
 
@@ -309,6 +356,74 @@ int main(void)
 	int menu;
 	int stage;
 
+	char currentDirectory[CHARBUFF];
+	getCurrentDirectory(currentDirectory);
+
+
+		char section[CHARBUFF];
+		sprintf_s(section, title);
+
+		char keyWord1[CHARBUFF];
+		sprintf_s(keyWord1, kind1);
+
+		char keyWord2[CHARBUFF];
+		sprintf_s(keyWord2, kind2);
+
+		char keyWord3[CHARBUFF];
+		sprintf_s(keyWord3, kind3);
+
+		char keyWord4[CHARBUFF];
+		sprintf_s(keyWord4, kind4);
+
+		char keyWord5[CHARBUFF];
+		sprintf_s(keyWord5, kind5);
+
+		char keyWord6[CHARBUFF];
+		sprintf_s(keyWord6, kind6);
+
+		char File[CHARBUFF];
+		sprintf_s(File, "%s\\maze.ini", currentDirectory);
+
+
+		if (GetPrivateProfileString(section, keyWord1, "none", keyValue1, CHARBUFF, File) != 0) {
+			data1 = keyValue1;
+			fprintf(stdout, "%s\n", data1);
+			
+		}
+
+		if (GetPrivateProfileString(section, keyWord2, "none", keyValue2, CHARBUFF, File) != 0) {
+			data2 = keyValue2;
+			fprintf(stdout, "%s\n", data2);
+
+		}
+
+		if (GetPrivateProfileString(section, keyWord3, "none", keyValue3, CHARBUFF, File) != 0) {
+			data3 = keyValue3;
+			fprintf(stdout, "%s\n", data3);
+
+		}
+
+		if (GetPrivateProfileString(section, keyWord4, "none", keyValue4, CHARBUFF, File) != 0) {
+			data4 = keyValue4;
+			fprintf(stdout, "%s\n", data4);
+
+		}
+
+		if (GetPrivateProfileString(section, keyWord5, "none", keyValue5, CHARBUFF, File) != 0) {
+			data5 = keyValue5;
+			fprintf(stdout, "%s\n", data5);
+		}
+
+		if (GetPrivateProfileString(section, keyWord6, "none", keyValue6, CHARBUFF, File) != 0) {
+			data6 = keyValue6;
+			fprintf(stdout, "%s\n", data6);
+
+		}
+
+			//data[i] = keyValue;
+			//fprintf(stdout, "%s\n", data[i]);
+			
+	
 	while (1)
 	{
 		//メニュー選択      
@@ -339,6 +454,8 @@ int main(void)
 
 		//ゲームが終わるとwhileループの先頭にもどる
 	}
+	
+	
 
 	return 0;
 }
