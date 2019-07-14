@@ -1,0 +1,9 @@
+﻿  stdafx.cpp
+  meiro.cpp
+  meiro2.cpp
+  コード生成しています。
+e:\3回生 広瀬彩里\c言語\portablegit\portablegit\kadai\meiro\meiro\meiro2.cpp(208): warning C4715: 'MeiroPlayerInit': 値を返さないコントロール パスがあります。
+  All 22 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  コード生成が終了しました。
+  meiro.vcxproj -> E:\3回生 広瀬彩里\C言語\PortableGit\PortableGit\kadai\meiro\Release\meiro.exe
+  meiro.vcxproj -> E:\3回生 広瀬彩里\C言語\PortableGit\PortableGit\kadai\meiro\Release\meiro.pdb (Full PDB)
